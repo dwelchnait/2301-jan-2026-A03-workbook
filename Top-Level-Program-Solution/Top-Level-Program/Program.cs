@@ -22,6 +22,23 @@ Console.WriteLine("Hello, World!");
 
 int rawGrade;
 int weight, maxGrade;
+double weightMark = 0.0;
+
+//decimal literals need to be identified by having an m at the end
+//  of the value
+//decimal weightMark = 0.0m;
+
+// default value for a string is null
+// literal strings are encased in double quotes (")
+// literal characters (char) are encased in single quotes (')
+string courseID;
+
+//class variables
+//DateTime which holds both a date and time
+//.Today has a date of today and a time of 00:00:00am
+//.Now has a date of today and a time of this millesecond
+DateTime theDate = DateTime.Today;
+
 
 
 
