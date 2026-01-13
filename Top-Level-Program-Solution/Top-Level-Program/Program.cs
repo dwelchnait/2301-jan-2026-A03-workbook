@@ -39,6 +39,32 @@ string courseID;
 //.Now has a date of today and a time of this millesecond
 DateTime theDate = DateTime.Today;
 
+//Input values
+//Console method ReadLine();
+//all input comes in as a string.
+//To convert to a specific datatype, investigate if the datatype
+//  has a .Parse() method
+
+string inputValue;
+
+//Write() does NOT move to the next line
+Console.Write("Enter the course id:/t");
+inputValue = Console.ReadLine();
+courseID = inputValue;
+Console.Write("Enter course mark weight:/t");
+inputValue = Console.ReadLine();
+weight = int.Parse(inputValue);
+Console.Write("Enter max mark :/t");
+inputValue = Console.ReadLine();
+maxGrade = int.Parse(inputValue);
+Console.Write("Enter raw score :/t");
+inputValue = Console.ReadLine();
+rawGrade = int.Parse(inputValue);
+
+//Calculations
+weightMark = rawGrade / maxGrade * weight;
+
+
 
 
 
