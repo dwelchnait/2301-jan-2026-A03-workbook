@@ -51,20 +51,22 @@ string inputValue;
 Console.Write("Enter the course id:/t");
 inputValue = Console.ReadLine();
 courseID = inputValue;
-Console.Write("Enter course mark weight:/t");
+Console.Write("Enter course mark weight:\t");
 inputValue = Console.ReadLine();
 weight = int.Parse(inputValue);
-Console.Write("Enter max mark :/t");
+Console.Write("Enter max mark :\t");
 inputValue = Console.ReadLine();
 maxGrade = int.Parse(inputValue);
-Console.Write("Enter raw score :/t");
+Console.Write("Enter raw score :\t");
 inputValue = Console.ReadLine();
 rawGrade = int.Parse(inputValue);
 
 //Calculations
 weightMark = rawGrade / maxGrade * weight;
 
-
+//output
+//string concatenation
+Console.WriteLine($"\nYour mark in {courseID} is {weightMark}");
 
 
 
