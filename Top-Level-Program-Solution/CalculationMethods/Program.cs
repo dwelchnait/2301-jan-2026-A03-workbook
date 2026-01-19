@@ -1,4 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Numerics;
+
 Console.WriteLine("Its a bunch of small worlds (after all)!!!");
 
 //discover the components of a method
@@ -34,10 +36,48 @@ string choice = ""; //empty string
 
 //call a method
 num1 = GetIntegerNumber("Enter your first calculation number:");
+num2 = GetIntegerNumber("Enter your second calculation number:");
 
-Console.WriteLine($"\n\tYou entered {num1}");
+//get the desired calculator operation
+//there is no parameters to this method (thus no arguments on call statement)
+//it does return a value
+choice = GetCalculatorOperation();
 
-//end of driver
+//Case statement for C#
+// a single value compared to a number of possibilities
+//      and a single one of the possibilities is matched to the argument value
+switch (choice.ToLower())
+{
+    case "a":
+        {
+            result = Addition(num1, num2);
+            Console.WriteLine($"\nThe sum of {num1} + {num2} = {(int)result}");
+            break; //this is not unstructured code, it is  part of the switch structure
+        }
+    case "s":
+        {
+            break; 
+        }
+    case "m":
+        {
+            break;
+        }
+    case "d":
+        {
+            break;
+        }
+    default:
+        {
+            //this last "case" is the "fall-thru" if no previous case was executed
+            //this "case" is typically used for invalid messages
+            Console.WriteLine($"\nYour operator choice of >{choice}< is invalid");
+            break;
+        }
+}
+
+
+
+//end of driver , program terminates
 
 //Method Area
 
@@ -108,4 +148,41 @@ static int GetIntegerNumber(string prompt)
     //this method must return an integer value
     //keyword -> return value;
     return localNumber;
+}
+
+static string GetCalculatorOperation()
+{
+    //any variable declared within this method has no association
+    //  with any variable outside of the method
+    //variables within a method may have the same name as a variable
+    //  outside of the method
+    //these variables are independent (restriction due to "static")
+
+    //NOTE: NO VALIDATION IS BEING DONE IN THESE EXAMPLES
+    string choice = "";
+    Console.WriteLine("\nCalculator Operations");
+    Console.WriteLine("a: Addition");
+    Console.WriteLine("s: Subtration");
+    Console.WriteLine("m: Multiplation");
+    Console.WriteLine("d: Division");
+    Console.Write("Enter your operator choice:\t");
+
+    choice = Console.ReadLine();
+
+    return choice;
+}
+
+static int Addition(int num1, int num2)
+{
+    //the parameters num1 and num2 are considered declared for 
+    //      the method
+    //these parameter/variables "live" as long as the method is
+    //      executing
+    //once the method is finished executing the local parameter/variables
+    //      cease to exist, they "die"
+    //the parameters in this method are "value-type" parameters
+    //therefore they receive a "copy" of the value from the call statement
+    //Any alteration of the local copies DO NOT affect the original values
+    //num1 and num2 are NOT num1 and num2 of the driver routine
+    return num1 + num2;
 }
