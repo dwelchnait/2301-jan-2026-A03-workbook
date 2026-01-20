@@ -55,15 +55,21 @@ switch (choice.ToLower())
             break; //this is not unstructured code, it is  part of the switch structure
         }
     case "s":
-        {
+        { 
+            result = Subtraction(num1, num2);
+            Console.WriteLine($"\nThe result of {num1} - {num2} = {(int)result}");
             break; 
         }
     case "m":
         {
+            result = Multiplication(num1, num2);
+            Console.WriteLine($"\nThe product of {num1} * {num2} = {(int)result}");
             break;
         }
     case "d":
         {
+            result = Division(num1, num2);
+            Console.WriteLine($"\nThe result of {num1} / {num2} = {result}");
             break;
         }
     default:
@@ -185,4 +191,21 @@ static int Addition(int num1, int num2)
     //Any alteration of the local copies DO NOT affect the original values
     //num1 and num2 are NOT num1 and num2 of the driver routine
     return num1 + num2;
+}
+
+static int Subtraction(int num1, int num2)
+{
+   
+    return num1 - num2;
+}
+
+static int Multiplication(int num1, int num2)
+{
+
+    return num1 * num2;
+}
+static double Division(int num1, int num2)
+{
+
+    return (double)num1 / (double)num2;
 }
