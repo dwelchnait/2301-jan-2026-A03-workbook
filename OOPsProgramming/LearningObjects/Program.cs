@@ -53,14 +53,14 @@ try
 }
 catch (ArgumentNullException ex)
 {
-    //OPTIONALLY
+    //OPTIONAL
     //ArgumenNulltException is a more specific exception indentifier
     //  then ArgumentException
     Console.WriteLine($"\n\tMissing Data: {ex.Message}");
 }
 catch (ArgumentException ex)
 {
-    //OPTIONALLY
+    //OPTIONAL
     //ArgumentException is a more specific exception indentifier
     //it MUST be code prior to the general exception catch
     //this is the coding block that handles the thrown exception
