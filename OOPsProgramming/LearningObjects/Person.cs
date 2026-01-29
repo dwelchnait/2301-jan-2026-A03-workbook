@@ -81,48 +81,61 @@ namespace LearningObjects
 
         //fully implemented propety version for Name is accociated with the
         //  data member _Name
+        //public string Name
+        //{
+        //    //accessor (getter)
+        //    //returns the string associated with this property
+        //    get { return _Name; }
+
+        //    //mutator (setter)
+        //    //the incoming data value is accessed within the property
+        //    //  using the keyword: value
+        //    //the incoming value to the instance's property  will be stored
+        //    //  in the data member _Name.
+
+        //    //it is within the set that the validation of the data
+        //    //  is done to determine if the data is acceptable
+        //    //if all processing of the string is done via the property
+        //    //  it will ensure that good data is within the associated string
+        //    set
+        //    {
+        //        if (string.IsNullOrWhiteSpace(value))
+        //        {
+        //            //classes do not output directly to the program user
+        //            //classes throw Exceptions that are handled by the program and displayed to the 
+        //            //  human user
+        //            //there are many types of exceptions within C#
+        //            // general, catchall, exception: Exception
+        //            // specific exceptions:
+        //            //      ArgumentNullException (used when missing a value)
+        //            //      ArgumentException ( used when the value supplied is incorrect)
+        //            throw new ArgumentNullException("Name", "Name cannot be empty or just blanks");
+        //        }
+        //        else
+        //        {
+        //            //it is a very good practice to remove leading and trailing spaces on strings
+        //            //  so that only the required and important characters are stored.
+        //            //to do this sanitization use .Trim()
+        //            //this does not remove embedded blanks
+        //            _Name = value.Trim();
+        //        }
+
+        //    }
+        //}
+
         public string Name
         {
-            //accessor (getter)
-            //returns the string associated with this property
+          
             get { return _Name; }
 
-            //mutator (setter)
-            //the incoming data value is accessed within the property
-            //  using the keyword: value
-            //the incoming value to the instance's property  will be stored
-            //  in the data member _Name.
-
-            //it is within the set that the validation of the data
-            //  is done to determine if the data is acceptable
-            //if all processing of the string is done via the property
-            //  it will ensure that good data is within the associated string
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    //classes do not output directly to the program user
-                    //classes throw Exceptions that are handled by the program and displayed to the 
-                    //  human user
-                    //there are many types of exceptions within C#
-                    // general, catchall, exception: Exception
-                    // specific exceptions:
-                    //      ArgumentNullException (used when missing a value)
-                    //      ArgumentException ( used when the value supplied is incorrect)
-                    throw new ArgumentNullException("Name", "Name cannot be empty or just blanks");
-                }
-                else
-                {
-                    //it is a very good practice to remove leading and trailing spaces on strings
-                    //  so that only the required and important characters are stored.
-                    //to do this sanitization use .Trim()
-                    //this does not remove embedded blanks
+              
                     _Name = value.Trim();
-                }
+               
 
             }
         }
-
         //auto implemented property version for Name
         //public string Name { get; set; }
 
@@ -218,6 +231,8 @@ namespace LearningObjects
         //  is not included on the coded constructor in the user program
         public Person(string name, int age, decimal wage = 0.00m)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException("name");
             Name = name;
             Age = age;
 
