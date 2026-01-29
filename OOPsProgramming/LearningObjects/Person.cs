@@ -36,7 +36,7 @@ namespace LearningObjects
 
         private string _Name;
         private int _Age;
-       
+
 
         //properties
 
@@ -97,7 +97,7 @@ namespace LearningObjects
             //  is done to determine if the data is acceptable
             //if all processing of the string is done via the property
             //  it will ensure that good data is within the associated string
-            set 
+            set
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
@@ -119,7 +119,7 @@ namespace LearningObjects
                     //this does not remove embedded blanks
                     _Name = value.Trim();
                 }
-                     
+
             }
         }
 
@@ -139,8 +139,8 @@ namespace LearningObjects
             set
             {
                 if (value < 0)
-                // {
-                // a throw cause execution to stop and exit the property or method
+                    // {
+                    // a throw cause execution to stop and exit the property or method
                     throw new ArgumentException($"The age {value} is invalid. Age must be 0 or greater", "Age");
                 // }
                 // else
@@ -152,7 +152,19 @@ namespace LearningObjects
 
         //create an auto implemented property for Wage data
         //the o/s will create the storage area for saving the data within the class instance (object)
-        public decimal Wage { get; set; }
+
+        //one option on the setter is to make it private
+        //if private:
+        //  changes to this data will ONLY be done via a constructor or a method
+        //  one will NOT be able to directly change the data via the property
+        //  DO NOT make your getter private
+
+        //if you validation is NOT in the property, EVERY time you alter the data
+        //  you NEED to consider if validation is required.
+        //if validation is required, that validation MUST be placed in your code
+        //  WHEREVER the alternation is done
+
+        public decimal Wage { get; private set; }
 
 
         //methods
@@ -253,6 +265,15 @@ namespace LearningObjects
             //Notice: Wage is not passed in, as it is already known within the instance
             // yearsofservice is NOT stored within the instance THERFORE it MUST be a parameter
             return Wage * yearsofservice;
+        }
+
+        //this method will allow the alteration of the Wage data
+        //if the setter on Wage was NOT private then this method would NOT be needed
+        public void ChangeWage(decimal wage)
+        {
+            if (wage < 0)
+                throw new ArgumentException($"The wage {wage} is invalid. Wage must be 0 or greater", "Wage");
+            Wage = wage;
         }
     }
 }

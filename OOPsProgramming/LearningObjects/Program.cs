@@ -38,6 +38,15 @@ Console.WriteLine($"\nThe contents of Name on my instance (object) is {Me.Name}"
 Me.Name = "   Terry    ";
 Console.WriteLine($"The new contents of Name on my instance (object) is {Me.Name}");
 
+Console.WriteLine($"\nThe contents of Wage on my instance (object) is {Me.Wage}");
+
+//since Wage has a prviate setter, we will NOT be able to directly alter the Wage
+//  via the property
+//Instead, a special method needed to be created to alter the Wage value AFTER
+//  the instance was create (after the execution of the constructor)
+Me.ChangeWage(56.87m);
+Console.WriteLine($"The new contents of Wage on my instance (object) is {Me.Wage}");
+
 //what happens if I attempt to assign an invalid value to a field on your instance
 //example of user friendly error handling
 //problem: a negative age will cause an exception to be thrown by the class
