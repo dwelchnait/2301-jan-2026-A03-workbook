@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 
 //a namespace is use to indicate organization with our code
@@ -130,9 +131,9 @@ namespace LearningObjects
 
             set
             {
-              
-                    _Name = value.Trim();
-               
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentNullException("Name","Name cannot be missing or blank");
+                _Name = value.Trim();
 
             }
         }
@@ -231,8 +232,7 @@ namespace LearningObjects
         //  is not included on the coded constructor in the user program
         public Person(string name, int age, decimal wage = 0.00m)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+           
             Name = name;
             Age = age;
 
