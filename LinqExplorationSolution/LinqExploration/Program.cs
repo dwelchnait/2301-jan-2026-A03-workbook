@@ -1,4 +1,5 @@
-﻿using LearningObjects; //have knowledge of Person class
+﻿using LearningObjects;
+using LinqExploration; //have knowledge of Person class
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("\n\tWorld of Exploration on Collections!\n");
@@ -156,6 +157,62 @@ if (OrderLinqfoundThem != null)
 else
     Console.WriteLine($"\nNo workers in that age bracket.");
 
+/* ************* STEP 4: Projections from a Collection**************** */
+
+// the Linq method(clause) to use is the .Select(predicate)
+
+// allows for subset of particular attributes to be extracted from
+//      a collection, expressions to generate new attributes
+//the protection can be 1 of 3 types
+//  a) Anonymous type
+//  b) Named (Strongly) type (to an existing class definition)
+//  c) tuple
+
+//Anonymous type
+// in this type no predefine class definition exists
+
+var results = workers.Select(x => new { x.Name , x.Wage });
+
+//this gives a collection of
+//      {Name= "value", Wage="vale" }
+//the collection is an IEnumerable<T>
+
+Console.WriteLine($"\nProjected Anonymous Worker list Collection.\n");
+foreach (var item in results)
+{
+    //NOTE: if you attempt to use item.Age it will not compile
+    //          because Age is not in the new collection definition
+    Console.WriteLine($"The item in the collection is: {item.Name} and {item.Wage}");
+}
+
+//Name type
+// in this type HAS a predefine class definition 
+
+var resultsName = workers.Select(x => 
+                                    new ProjectedPerson { Name = x.Name,
+                                        Age = x.Age,
+                                        Bonus = x.Wage * x.Age / 1000.0m});
+
+Console.WriteLine($"\nProjected Named Worker list Collection.\n");
+foreach (var item in resultsName)
+{
+    //NOTE: if you attempt to use item.Age it will not compile
+    //          because Age is not in the new collection definition
+    Console.WriteLine($"The item in the collection is: {item.Name} and {item.Age} and {item.Bonus}");
+}
+
+//tuple
+//quick and easy temporary collections
+
+var resultsType = workers.Select(x => (x.Name, x.Age));
+
+Console.WriteLine($"\nProjected Tuple Worker list Collection.\n");
+foreach (var item in resultsType)
+{
+    //NOTE: if you attempt to use item.Age it will not compile
+    //          because Age is not in the new collection definition
+    Console.WriteLine($"The item in the collection is: {item.Name} and {item.Age}");
+}
 /* ************************* methods ********************************* */
 
 //Remember to isolate your methods use : static
