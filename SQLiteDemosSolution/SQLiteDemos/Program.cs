@@ -25,7 +25,7 @@ Console.WriteLine("Hello, World!");
 
 using AppDbContext context = new AppDbContext();
 
-//  context.DataBase.EnsureDelete
+//  context.DataBase.EnsureDeleted();
 context.Database.EnsureCreated();
 
 //create a collection of People (type is Person)
