@@ -21,6 +21,8 @@ namespace SQLiteDemos
         //each collection requires it's own property
         public DbSet<Person> People { get; set; }
 
+        public DbSet<Department> Departments { get; set; }
+
         //configure the application so that it knows where to locate the datastore
         //BY DEFAULT: the expected location of the datastore will be in the same folder
         //              as your application .exe
@@ -47,6 +49,8 @@ namespace SQLiteDemos
         //describe to the application the declaration of the table in SQLite
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Person>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -63,9 +67,14 @@ namespace SQLiteDemos
                 //  as well as your validation in your entity class
                 entity.ToTable(v => v.HasCheckConstraint("CK_Person_Age", "[Age] >= 0"));
                 entity.ToTable(v => v.HasCheckConstraint("CK_Person_Mark", "[Mark] >= 0 and [Mark] <= 100"));
-            }
-            );
+            });
 
+
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasIndex(x => x.Code).IsUnique();
+            });
         }
     }
 }
