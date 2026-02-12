@@ -39,7 +39,9 @@ namespace SQLiteDemos
             dbPath = Path.GetFullPath(dbPath);
 
             //tell SQLite to use this file
-            options.UseSqlite(dbPath);
+            //you need to identify the value being past to UseSqlite by a
+            //  keyword: Data Source
+            options.UseSqlite($"Data Source={dbPath}");
         }
 
         //describe to the application the declaration of the table in SQLite
@@ -59,7 +61,7 @@ namespace SQLiteDemos
 
                 //you can add validation to your properties within the modeling
                 //  as well as your validation in your entity class
-                entity.ToTable(v => v.HasCheckConstraint("CK_Person_Age", "[Age] >= 0 and [Age] <= 120"));
+                entity.ToTable(v => v.HasCheckConstraint("CK_Person_Age", "[Age] >= 0"));
                 entity.ToTable(v => v.HasCheckConstraint("CK_Person_Mark", "[Mark] >= 0 and [Mark] <= 100"));
             }
             );
