@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //all using namespace statement must be at the top of your code
 #region Additonal Namespaces
+using Microsoft.EntityFrameworkCore;
 using SQLiteDemos;
 #endregion
 
@@ -22,6 +23,7 @@ Console.WriteLine("Hello, World!");
 
 //your program needs to create an instance of your context class
 //  to be able to interact with sqllite
+
 
 using AppDbContext context = new AppDbContext();
 

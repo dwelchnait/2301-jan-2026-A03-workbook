@@ -17,6 +17,8 @@ namespace SQLiteDemos
     //this class is often referred to as the DAL class (Data Access Layer)
     public class AppDbContext : DbContext
     {
+        
+             
         //declare a property which will represent our collection from the persisted datastore
         //each collection requires it's own property
         public DbSet<Person> People { get; set; }
@@ -63,10 +65,13 @@ namespace SQLiteDemos
                 entity.Property(e => e.Mark)
                       .IsRequired();
 
+              
                 //you can add validation to your properties within the modeling
                 //  as well as your validation in your entity class
                 entity.ToTable(v => v.HasCheckConstraint("CK_Person_Age", "[Age] >= 0"));
                 entity.ToTable(v => v.HasCheckConstraint("CK_Person_Mark", "[Mark] >= 0 and [Mark] <= 100"));
+
+             
             });
 
 
@@ -74,6 +79,7 @@ namespace SQLiteDemos
             {
                 entity.HasKey(x => x.Id);
                 entity.HasIndex(x => x.Code).IsUnique();
+                
             });
         }
     }
