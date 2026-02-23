@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace SQLiteDemos
+namespace SQLiteDemos.System.Models
 {
     public class Person
     {
@@ -28,7 +28,11 @@ namespace SQLiteDemos
 
         //1 to many relationship  One Department has many People
         //Notice on the many declaration this nav property is a single instance
-        public Department Department { get; set; } 
+        public Department Department { get; set; }
+
+        //many to many relationship with Person (people)
+        //many side, collection type property
+        public List<Project> Projects { get; set; } = new();
 
     }
 }

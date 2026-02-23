@@ -6,7 +6,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 #endregion
 
-namespace SQLiteDemos
+namespace SQLiteDemos.System.Models
 {
     public class Department
     {

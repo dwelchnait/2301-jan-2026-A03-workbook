@@ -2,7 +2,8 @@
 //all using namespace statement must be at the top of your code
 #region Additonal Namespaces
 using Microsoft.EntityFrameworkCore;
-using SQLiteDemos;
+using SQLiteDemos.System.DAL; //points to the context class
+using SQLiteDemos.System.Models; //points to entities in the class library
 #endregion
 
 Console.WriteLine("Hello, World!");
@@ -10,6 +11,31 @@ Console.WriteLine("Hello, World!");
 
 //use the class and context class to write and retreive records (instances)
 //  from a sqlite db (which is actually just a file)
+
+// Force SQLite to use a single database file in the project root.
+// Prevents "no such table" errors caused by different working directories
+//adjusted path, one needs to know the location of your .exe
+//      AppDomain.CurrentDomain.BaseDirectory
+//once the .exe location is known, I can combine that location with
+//      relative address to reach the desired location of the SQLite file
+
+var dbPath = Path.Combine(
+              AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "dpPeople.db");
+
+//get the full path name from the top of your machine
+dbPath = Path.GetFullPath(dbPath);
+
+//tell SQLite to use this file
+//you need to identify the value being past to UseSqlite by a
+//  keyword: Data Source
+var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite($"Data Source={dbPath}")
+                .Options;
+
+//your program needs to create an instance of your context class
+//  to be able to interact with sqllite
+
+using AppDbContext context = new AppDbContext(options);
 
 //two commands that can be execute to manage your sqlite db file
 //      via an instance of your context class (context) are:
@@ -21,11 +47,7 @@ Console.WriteLine("Hello, World!");
 //      this command will delete your existing dbFile of your context class
 //      this command is useful if you wish to remove the file
 
-//your program needs to create an instance of your context class
-//  to be able to interact with sqllite
 
-
-using AppDbContext context = new AppDbContext();
 
 //  context.DataBase.EnsureDeleted();
 context.Database.EnsureCreated();

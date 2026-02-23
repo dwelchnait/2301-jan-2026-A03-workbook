@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="SQLiteDemos.System/SQLiteDemos.System.csproj" Id="86e51fce-2367-4007-9432-346de577f845" />
   <Project Path="SQLiteDemos/SQLiteDemos.csproj" />
 </Solution>
