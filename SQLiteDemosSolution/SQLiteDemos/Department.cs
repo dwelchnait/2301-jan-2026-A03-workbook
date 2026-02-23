@@ -28,6 +28,8 @@ namespace SQLiteDemos
         public string DepartmentName { get; set; }
 
         //Navigational property
+        //1 to many relationship  One Department has many People
+        //Notice on the one declaration this nav property is a collection of instances
         public List<Person> People { get; set; } = new();
 
     }

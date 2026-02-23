@@ -21,8 +21,14 @@ namespace SQLiteDemos
         [Range(0, 100, ErrorMessage = "Mark must be between 0 and 100.")]
         public int Mark { get; set; }
 
+        //used for the 1 to many relationship between Department and Person
+        // add a property that would contain the value of the parent instance
+        public int DepartmentId { get; set; }
         //Navigational property
-        public List<Department> Departments { get; set; } = new();
+
+        //1 to many relationship  One Department has many People
+        //Notice on the many declaration this nav property is a single instance
+        public Department Department { get; set; } 
 
     }
 }
