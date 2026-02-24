@@ -36,5 +36,24 @@ namespace SQLiteDemos.System.Services
 
         }
         #endregion
+        #region Maintain DataStore (Add, Update and Delete)
+        public async Task Project_Add(Project project)
+        {
+            //Why does Task NOT have a datatype specified like the query
+            //This service DOES NOT return any value
+
+            //Guard Rail
+            ArgumentNullException.ThrowIfNull(project,nameof(project));
+
+            //Stage
+
+            await _context.Projects
+                        .AddAsync(project);
+
+            //for SaveChanges you will want to use await/async
+            await _context.SaveChangesAsync();
+        }
+
+        #endregion
     }
 }

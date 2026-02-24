@@ -3,7 +3,8 @@
 #region Additonal Namespaces
 using Microsoft.EntityFrameworkCore;
 using SQLiteDemos.System.DAL; //points to the context class
-using SQLiteDemos.System.Models; //points to entities in the class library
+using SQLiteDemos.System.Models;
+using SQLiteDemos.System.Services; //points to entities in the class library
 #endregion
 
 Console.WriteLine("Hello, World!");
@@ -37,6 +38,23 @@ var options = new DbContextOptionsBuilder<AppDbContext>()
 
 using AppDbContext context = new AppDbContext(options);
 
+
+//use Dependency Injection to let service classes to know about context to db connection
+//Why This Is Better
+//Your class library should NOT know about:
+//  SQLite
+//  File paths
+//  Connection strings
+
+//That is infrastructure.
+//using this technique loosely couples your service with a context class
+// thus your front end can identify your data stores
+//The console app is the "composition root" — it wires everything together.
+
+var departmentServices = new DepartmentServices(context);
+var personServices = new PersonServices(context);
+var projectServices = new ProjectServices(context);
+
 //two commands that can be execute to manage your sqlite db file
 //      via an instance of your context class (context) are:
 //  context.DataBase.EnsureCreate
@@ -46,6 +64,14 @@ using AppDbContext context = new AppDbContext(options);
 //  context.Database.EnsureDelete
 //      this command will delete your existing dbFile of your context class
 //      this command is useful if you wish to remove the file
+
+Department depart = new Department();
+depart.Code = "SDEV";
+depart.DepartmentName = "SoftwareDevelopment";
+
+//notice that the adding to the database is NOT done in the UI project
+//the responsibility of maintaining the db data is the application (Library)
+departmentServices.Department_Add(depart);
 
 
 

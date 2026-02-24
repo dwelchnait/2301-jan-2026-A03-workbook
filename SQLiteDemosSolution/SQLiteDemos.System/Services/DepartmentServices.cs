@@ -64,5 +64,29 @@ namespace SQLiteDemos.System.Services
                             
         }
         #endregion
+
+        #region Maintain DataStore (Add, Update and Delete)
+        public async Task Department_Add(Department department)
+        {
+            //Why does Task NOT have a datatype specified like the query
+            //This service DOES NOT return any value
+
+            //Guard Rail
+            ArgumentNullException.ThrowIfNull(department,nameof(department));
+
+            //Stage
+            //could also not use Async on memory located staging as
+            //  it does not involve a call to the database and thus
+            //  would not tie up the database
+            //await _context.Departments
+            //            .AddAsync(department);
+            _context.Departments
+                        .Add(department);
+
+            //for SaveChanges you will want to use await/async
+            await _context.SaveChangesAsync();
+        }
+
+        #endregion
     }
 }
