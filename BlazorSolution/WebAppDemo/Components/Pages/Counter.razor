@@ -7,6 +7,11 @@
 
 <p role="status">Current count: @currentCount</p>
 
+@* the onclick attribute indicates the named method is to be executed when the button is pressed
+the data in currentCount will be maintained on the page as long as the page is the active page
+    once you leave this page and return, the system will reset the counter to its initial value
+This is because the internet is a "stateless system" *@
+
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {

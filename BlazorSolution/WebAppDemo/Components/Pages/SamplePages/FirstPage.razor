@@ -1,0 +1,29 @@
+﻿@page "/firstPage"
+@page "/firstpagefromsomewhere"
+@* 
+    the first physical line on your component can be a directive
+        indicating that the component is a page that can stand
+        on its own. 
+
+    to have this page displayed one needs to navigate to the page
+        either by using a link (NavLink) on the menu, an anchor tag (href=)
+                or by using the NavigationManager Services (injection service)
+
+    A page can also have several routing names
+*@
+
+<PageTitle>My First Page</PageTitle>
+@*
+    this tag will supply the text for the browser page tag
+    course standard: All component pages will have an appropriate Page Title
+*@
+<h1>First Page</h1>
+<h4>... my first component page</h4>
+
+<p>This is the context portion of the web page</p>
+
+<p>....by Don Welch</p>
+
+@code {
+    // this is where the C# code will be placed
+}

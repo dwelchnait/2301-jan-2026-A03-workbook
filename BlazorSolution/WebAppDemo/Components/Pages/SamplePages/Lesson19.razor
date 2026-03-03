@@ -1,0 +1,31 @@
+﻿@page "/lesson19"
+<PageTitle>Lesson 19</PageTitle>
+<h1>lesson 19</h1>
+<h3>Component Basics</h3>
+
+<p>The time no is: @DateTime.Now</p>
+
+@*
+    when using any item in C# such such as a variable
+        the variable needs to be declared in the C# coding block at the bottom of this component
+        the variable itself when NOT attached to a input control, is a one-way bind (outward bound)
+*@
+<p>@openingMessage</p>
+
+<label>Enter your name:</label>
+
+@*
+    the inputValue on the input control in the bind attribute is treated as a two-way bind on the component
+    the inputValue is a C# variable 
+*@
+<input @bind="inputValue" />
+
+@if (inputValue.Length > 0)
+{
+    <p>Your name is @inputValue</p>
+}
+
+@code {
+    private string openingMessage = "Variables can be create in your code block at the bottom of your component";
+    private string inputValue = "";
+}
