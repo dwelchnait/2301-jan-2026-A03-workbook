@@ -1,0 +1,22 @@
+﻿<button @onclick="OnClick" class="btn @ButtonStyle rounded-pill" style="width:150px">
+    @Label
+</button>
+
+@code {
+    //setup the parameter for Label
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string ButtonStyle { get; set; } = "btn-outline-primary";
+
+    /*
+     * send processing back to the parent component page for excution
+     * that is the execution of the button is not dependent on this component
+     * this component contains ONLY the control to be reused on other parent components
+     * Sending the processing back is called a EventCallBack 
+     */
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

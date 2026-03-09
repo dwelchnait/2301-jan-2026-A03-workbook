@@ -1,0 +1,51 @@
+﻿@page "/lesson21"
+<PageTitle>Parameters and Callbacks</PageTitle>
+
+<h1>ParametersAndCallbacks</h1>
+
+<p>
+    In this lesson, you will learn how to build reusable UI components (sub component) in Blazor using Razor syntax.
+    You’ll also learn how to pass data into a component using parameters
+    and how to send actions back to a parent component using EventCallback.
+
+    An event is an action the is activated by pressing button
+    An attribute on the button called onclick="methodname" will cause a locate method
+        to execute when the button is pressed
+</p>
+
+<p>Counter @counter</p>
+
+<p> 
+    Local button: <button @onclick="LocalButton">
+        Local Button
+    </button>
+ 
+</p>
+
+<p> 
+    Using a common reusable UI component as the button
+    <br/>
+    <br/>
+    <ActionButton Label="Add" OnClick="Increment" ButtonStyle="btn-outline-success"/>
+    <ActionButton Label="Subtract" OnClick="Decrement" ButtonStyle="btn-outline-danger" />
+</p>
+
+
+
+@code {
+    public int counter = 0;
+
+    public void LocalButton()
+    {
+        counter++;
+    }
+
+    private void Increment()
+    {
+        counter++;
+    }
+    private void Decrement()
+    {
+        counter--;
+    }
+}
