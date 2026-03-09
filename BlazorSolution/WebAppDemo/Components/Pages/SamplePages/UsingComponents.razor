@@ -1,0 +1,23 @@
+﻿@page "/lesson20"
+<PageTitle>Using Components </PageTitle>
+<h1>UsingComponents</h1>
+
+<blockquote>
+    This page will demonstrate the use of buttons and non-page components. <br/>
+    This page will call a non-page component and pass it a parameter value.
+</blockquote>
+
+@*
+    use another component by using the file name as the name of the tag
+    it can send data to the other component
+
+    there is the capability of passing data into the sub component to be 
+        handled by the sub component
+    to pass the data, use a variable parameter that exists on the sub component
+*@
+<Greetings name="Don"/>
+<Greetings/>
+
+@code {
+
+}

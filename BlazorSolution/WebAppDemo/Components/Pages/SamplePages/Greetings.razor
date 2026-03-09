@@ -1,0 +1,15 @@
+﻿@*
+    if your razor component file does NOT have the page directive at the top
+        then this component can ONLY be referenced on another component as
+        a tag <whatevername>
+    It cannot be navigated to using a routing name
+*@
+<h3>Hello @name</h3>
+
+@code {
+    // this property to be used as a parameter requires the it has an annotation
+    //      stating its use
+    // parameters must be created as  a property
+    [Parameter]
+    public string name { get; set; } = "Lowand Behold";
+}
