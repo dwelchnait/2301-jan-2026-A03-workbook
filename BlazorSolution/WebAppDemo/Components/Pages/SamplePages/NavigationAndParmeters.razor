@@ -1,0 +1,48 @@
+﻿@page "/lesson22"
+<PageTitle>Navigation and Parameters</PageTitle>
+
+<h3>Navigation And Parmeters</h3>
+
+<p> On this page we will demonstrate
+    <ul>
+        <li>Navigation from one page to another page</li>
+        <li>passing a parameter navigating from  one page to another page</li>
+        <li>introduction to injection dependency</li>
+    </ul>
+</p>
+
+@*
+    Label - parameter on ActionButton, text for the button
+    ButtonStyle - parameter on ActionButton, styling of the control
+    OnClick  - parameter eventcallback on ActionButton, will cause local method NavToPage
+                    to execute
+*@
+<ActionButton Label="Go To ..." OnClick="NavToPage" ButtonStyle="btn-outline-success" />
+&nbsp;&nbsp;
+<ActionButton Label="Go To With ..." OnClick="NavToPageWith" ButtonStyle="btn-outline-success" />
+
+@code {
+    private int someValue = 23;
+
+    //with our software not all avaiable functionality is defaulted to your app
+    //if you wish to use avaiable functionality then what you need to do is to inject
+    //  the functionality class into your app
+    //this is done by using an annotation [Inject] and declaring a properter
+    //  of the class you wish to inject
+
+    [Inject]
+    public NavigationManager navManager { get; set; }
+
+    public void NavToPage()
+    {
+        //the method argument is the routing name of the page 
+        //  to which you wish to go
+        navManager.NavigateTo("/lesson22b");
+    }
+    public void NavToPageWith()
+    {
+        //the method argument is the routing name of the page
+        //  to which you wish to go
+        navManager.NavigateTo($"/lesson22b/{someValue}");
+    }
+}

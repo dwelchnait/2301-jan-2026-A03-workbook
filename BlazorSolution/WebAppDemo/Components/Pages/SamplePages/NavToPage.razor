@@ -1,0 +1,49 @@
+﻿@page "/lesson22B"
+@page "/lesson22B/{incomingParam:int}"
+
+@*
+    A page may have several page directives
+        allowing for multiple alias names
+        and for allowing routing with or without parameters
+
+    One can combine both just name routing page and the paramter name routing page
+        as a single directive IF the parameter is make nullable
+    Of course this means when you declare your parameter in the code block
+        it needs to be declared as a nullable property
+
+        @page "/lesson22B/{incomingParamOpt:int?"
+
+        [Parameter]
+        public int? incomingParamOpt { get; set; } = 0;
+*@
+<PageTitle>Page Navigated To</PageTitle>
+
+<h3>Receivng Page</h3>
+
+<p>
+    This page can be reach from
+     <ul>
+         <li>a) menu</li>
+         <li>b) another page with a parameter</li>
+         <li>c) another page with a parameter</li>
+     </ul>
+</p>
+
+<ActionButton Label="Back" OnClick="BackToPage" ButtonStyle="btn-outline-success" />
+
+@if (incomingParam != 0)
+{
+    <p> You passed the value @incomingParam</p>
+}
+
+@code {
+    [Parameter]
+    public int incomingParam { get; set; } = 0;
+
+    [Inject]
+    public NavigationManager navManager { get; set; }
+    public void BackToPage()
+    {
+        navManager.NavigateTo("/lesson22");
+    }
+}
