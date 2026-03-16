@@ -1,0 +1,52 @@
+﻿@page "/lesson24"
+<PageTitle>CRUD and Components</PageTitle>
+
+@*
+    Additional Namespaces
+*@
+@using WebAppDemo.DataModels
+
+<h1>CRUD Master</h1>
+<h4>.... using reusable form and table components</h4>
+
+<blockquote>
+    This demo will contain:
+    <br />
+    <ul>
+        <li>use of reusable components</li>
+        <li>CallBacks</li>
+        <li>Parameters</li>
+        <li>EditForm component</li>
+        <li>Table component</li>
+        <li>local collection to hold data (List&lt;T&gt;)</li>
+    </ul>
+</blockquote>
+
+<AssessmentForm OnAdd="StoreMark"/>
+
+@*
+    quick dump of collection
+*@
+@if (_assessmentMarks.Count > 0)
+{
+    <br/><br/>
+    <ul>
+    @foreach(var item in _assessmentMarks)
+        {
+            <li>@item.Name @item.Weight @item.Mark @item.MaxMark @item.WeightedMark</li>
+        }
+    </ul>
+
+}
+
+@code {
+
+
+    // an instance of List<T> where T is the entity
+    public List<Assessment> _assessmentMarks = new();
+
+    private void StoreMark(Assessment item)
+    {
+        _assessmentMarks.Add(item);
+    }
+}

@@ -1,0 +1,94 @@
+﻿@*
+    Additional Namespaces
+*@
+@using WebAppDemo.DataModels
+
+<h3>Assessment Form</h3>
+
+@*
+    EditForm tag surrounds the complete form
+        Model: where the input controls of the data will be bound to
+        OnValidSubmit: if the data is deemed valid, execute the indicated method
+                        when the form button is pressed
+
+    DataAnnotationValidator: evokes any validation annotation on your entity
+
+    ValidationSummary: Displays a list of any validation annotation mesages
+                        if any exists
+
+    ValidationMessage: Will display your individual message associated with
+                        a particular field where the tag is coded
+*@
+<EditForm Model="_model" OnValidSubmit="HandleSubmitRequest">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb2">
+        <label class="form-label" for="name">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="_model.Name" />
+        <ValidationMessage For="@(() => _model.Name)" />
+    </div>
+
+    <div class="mb2">
+        <label class="form-label" for="weight">Assessment Weight</label>
+        <InputNumber id="weight" class="form-control" @bind-Value="_model.Weight" />
+        <ValidationMessage For="@(() => _model.Weight)" />
+    </div>
+
+    <div class="mb2">
+        <label class="form-label" for="mark">Mark</label>
+        <InputNumber id="mark" class="form-control" @bind-Value="_model.Mark" />
+        <ValidationMessage For="@(() => _model.Mark)" />
+    </div>
+    
+    <div class="mb2">
+        <label class="form-label" for="maxmark">Max Mark</label>
+        <InputNumber id="maxmark" class="form-control" @bind-Value="_model.MaxMark" />
+        <ValidationMessage For="@(() => _model.MaxMark)" />
+    </div>
+    <br /><br />
+    @*
+        button to submit the work
+    *@
+    <button class="btn btn-outline-primary rounded-pill" type="submit">Add Assessment</button>
+</EditForm>
+
+@code {
+    // an instance of the entity the form is going to be assoicate/built on
+    // the instance has to exist.
+    //this instance is reusable for the form
+    public Assessment _model = new();
+
+    //a parameter is needed to return the new copy instance to
+    //  the "parent" component page
+    [Parameter]
+    public EventCallback<Assessment> OnAdd { get; set; }
+
+    public async Task HandleSubmitRequest()
+    {
+        //this method will be called when the submit button on the
+        //  form has been pressed
+
+        //the data has been linked to the local variable _model
+        //the fields have been bound to the properties in the Assessment instance _model
+        //the data is already available for used from _model
+
+        //Create a copy of the instance to a new instance of Assessment
+        //  which will be placed on the collection
+        Assessment copy = new Assessment
+        {
+            Name =_model.Name,
+            Weight = _model.Weight,
+            Mark = _model.Mark,
+            MaxMark = _model.MaxMark
+        };
+
+        //this will return to the "parent" page component dragging
+        //  the argument copy to be place in the parameter of the
+        //  method on the "parent" page
+        await OnAdd.InvokeAsync(copy);
+
+        //clear the current reusable instance for the form
+        _model = new();
+    }
+}
