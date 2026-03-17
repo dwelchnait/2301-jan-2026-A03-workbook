@@ -29,14 +29,41 @@
 *@
 @if (_assessmentMarks.Count > 0)
 {
-    <br/><br/>
-    <ul>
-    @foreach(var item in _assessmentMarks)
-        {
-            <li>@item.Name @item.Weight @item.Mark @item.MaxMark @item.WeightedMark</li>
-        }
-    </ul>
-
+    <br/>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Mark Table</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-2 col-md-8">
+            <div class="overflow-scroll" style="height:450px;">
+                <table class="table table-striped">
+                    <thead style="position:sticky; top:0; background-color:white;">
+                        <tr>
+                            <th>Assessment</th>
+                            <th>Weight</th>
+                            <th>Mark</th>
+                            <th>Max Mark</th>
+                            <th>Weighted Mark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in _assessmentMarks)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Weight</td>
+                                <td>@item.Mark</td>
+                                <td>@item.MaxMark</td>
+                                <td>@item.WeightedMark</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
@@ -44,6 +71,36 @@
 
     // an instance of List<T> where T is the entity
     public List<Assessment> _assessmentMarks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        /*
+        * this method is a internal method step in process your
+         *      blazor component page
+         * this method is execute each time the page appears for the
+        *      first time 
+        * this method ONLY executes on the first time
+        * 
+        * Recommendation: do not remove the base class called for
+         *      the method
+         * There are base functions that should be executed
+         * Your custom setup should be done after the base execution
+         * The override would not cause the base execution to happen
+         * By leaving the base call in, you ensure that any base action
+         *      is done AND any future software updates to the base action
+         *      is done
+         */
+        base.OnInitializedAsync();
+
+        /*
+            * Add any of your own page intialization
+            */
+        _assessmentMarks.Add(new Assessment { Name="Lab 1", Weight=5, Mark=4, MaxMark=5});
+        _assessmentMarks.Add(new Assessment { Name="Lab 2", Weight=5, Mark=5, MaxMark=5 });
+        _assessmentMarks.Add(new Assessment { Name="Lab 3", Weight=5, Mark=1, MaxMark=5 });
+        _assessmentMarks.Add(new Assessment { Name="Assignment 1", Weight=20, Mark=14, MaxMark=20 });
+       
+    }
 
     private void StoreMark(Assessment item)
     {
