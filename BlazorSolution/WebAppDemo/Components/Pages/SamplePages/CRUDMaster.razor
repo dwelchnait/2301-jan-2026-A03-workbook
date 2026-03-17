@@ -25,47 +25,9 @@
 <AssessmentForm OnAdd="StoreMark"/>
 
 @*
-    quick dump of collection
+    table display will be placed in a reusable Blazor component
 *@
-@if (_assessmentMarks.Count > 0)
-{
-    <br/>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h3>Mark Table</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="offset-2 col-md-8">
-            <div class="overflow-scroll" style="height:450px;">
-                <table class="table table-striped">
-                    <thead style="position:sticky; top:0; background-color:white;">
-                        <tr>
-                            <th>Assessment</th>
-                            <th>Weight</th>
-                            <th>Mark</th>
-                            <th>Max Mark</th>
-                            <th>Weighted Mark</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in _assessmentMarks)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Weight</td>
-                                <td>@item.Mark</td>
-                                <td>@item.MaxMark</td>
-                                <td>@item.WeightedMark</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-}
-
+<MarkList _assessmentMarks="_assessmentMarks" OnRemove="RemoveMark"></MarkList>
 @code {
 
 
@@ -105,5 +67,9 @@
     private void StoreMark(Assessment item)
     {
         _assessmentMarks.Add(item);
+    }
+    private void RemoveMark(Assessment item)
+    {
+        _assessmentMarks.Remove(item);
     }
 }
