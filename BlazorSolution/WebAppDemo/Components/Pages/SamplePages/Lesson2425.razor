@@ -1,0 +1,94 @@
+﻿@page "/lesson2425"
+<PageTitle>Product Table Display</PageTitle>
+
+<!-- #region Additiional Namespaces -->
+@using WestWindSystem.Models;
+@using WestWindSystem.BLL;
+
+<!-- #endregion -->
+
+
+<h1>Product Table Display</h1>
+<h5>... using services from class library</h5>
+
+@if (errormsg.Length > 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <p alert alert-info>@errormsg</p>
+        </div>
+    </div>
+}
+
+@if (products.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Products Table by Product Name</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-1 col-md-10">
+            <div class="overflow-scroll" style="height:400px;">
+                <table class="table table-striped" >
+                    <thead style="position:sticky; top:0; background-color:White;">
+                       <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Supplier</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       @foreach(var item in products)
+                        {
+                            <tr>
+                                <td>@item.ProductID</td>
+                                <td>@item.ProductName</td>
+                                <td>@item.UnitPrice.ToString("#,##0.00")</td>
+                                <td>@item.Category.CategoryName</td>
+                                <td>@item.Supplier.CompanyName</td>
+                            </tr>
+                        }
+                    </tbody>
+               </table>
+           </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <p class="alert alert-info">There are no products on file</p>
+        </div>
+    </div>
+}
+
+
+@code {
+    private List<Product> products { get; set; } = new();
+    public string errormsg = "";
+
+    //To be able to use your service class on the web page
+    //  you will NEED to inject the service as a property
+    //  in the code block
+    [Inject]
+    public ProductServices productServices { get; set; }
+  
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await base.OnInitializedAsync();
+            products = await productServices.Product_GetAll();
+        }
+        catch (Exception ex)
+        {
+            errormsg = $"Error msg: {ex.Message}";
+        }
+
+    }  
+}
