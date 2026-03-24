@@ -1,0 +1,493 @@
+﻿@page "/productcrud"
+@page "/productcrud/{productid:int}"
+
+<PageTitle>Product CRUD</PageTitle>
+@rendermode InteractiveServer
+
+<!-- Additional namespaces-->
+@using WestWindSystem.BLL;
+@using WestWindSystem.Models;
+
+<h1>Product CRUD</h1>
+<cite> ... demonstrating CRUD using EditForm</cite>
+
+<br />
+<br />
+
+@if (feedBackMsg.Length > 0)
+{
+    <div class="alert alert-info">
+        <p>@feedBackMsg</p>
+    </div>
+}
+
+@if (errorMsgs.Count > 0)
+{
+    <div class="alert alert-danger">
+        <p>Please fix the following issues:</p>
+        <ul>
+            @foreach (var error in errorMsgs)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<br />
+<br />
+
+
+<EditForm Model="currentProduct" OnSubmit="HandleAction">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <div class="row">
+        <div class="offset-1 col-md-4">
+            <label for="productid" class="form-label">Product ID</label>
+            <InputNumber id="productid" class="form-control"
+                        @bind-Value="currentProduct.ProductID"
+                        style="width: 75px;" readonly />
+            <br/>
+            <label for="productname" class="form-label">Name</label>
+            <InputText id="productname" class="form-control"
+                        @bind-Value="currentProduct.ProductName" />
+            <ValidationMessage For="@(() => currentProduct.ProductName)" />
+
+            <!-- Foreign Keys-->
+            <!--
+                foreign keys should be handled in a way that the contents
+                    for selection is limited to the possible values on
+                    the database
+            -->
+            <br />
+            <label for="categoryid" class="form-label">Category</label>
+            <InputSelect id="categoryid" @bind-Value="currentProduct.CategoryID" class="form-control">
+                <option value="0">... select category ...</option>
+                @foreach(var item in categoryList)
+                {
+                    <option value="@item.CategoryID">@item.CategoryName</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => currentProduct.CategoryID)" />
+            <br />
+            <label for="supplierid" class="form-label">Supplier</label>
+            <InputSelect id="supplierid" @bind-Value="currentProduct.SupplierID" class="form-control">
+                <option value="0">... select supplier ...</option>
+                @foreach (var item in supplierList)
+                {
+                    <option value="@item.SupplierID">@item.CompanyName</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => currentProduct.SupplierID)" />
+
+
+        </div>
+   
+        <div class="offset-1 col-md-4">
+            <label for="qtyperunit" class="form-label">Qty / Unit</label>
+            <InputText id="qtyperunit" class="form-control"
+                       @bind-Value="currentProduct.QuantityPerUnit" />
+            <ValidationMessage For="@(() => currentProduct.QuantityPerUnit)" />
+            <br/>
+            <label for="minqty" class="form-label">Min Order Qty</label>
+            <InputNumber id="minqty" class="form-control"
+                       @bind-Value="currentProduct.MinimumOrderQuantity" />
+            <ValidationMessage For="@(() => currentProduct.MinimumOrderQuantity)" />
+            <br />
+            <label for="unitprice" class="form-label">Unit Price</label>
+            <InputNumber id="unitprice" class="form-control"
+                         @bind-Value="FormatUnitPrice" />
+            <ValidationMessage For="@(() => currentProduct.UnitPrice)" />
+            <br />
+            <label for="unitsonorder" class="form-label">Units on Order</label>
+            <InputNumber id="unitsonorder" class="form-control"
+                         @bind-Value="currentProduct.UnitsOnOrder" />
+            <ValidationMessage For="@(() => currentProduct.UnitsOnOrder)" />
+        </div>
+    </div>
+    <br/><br/>
+    <div class="row">
+        <div class="col-md-12 text-center">
+          
+            <button type="submit" class="btn btn-outline-primary rounded-pill"
+                    @onclick="@(() => SetAction("Add"))" style="width:160px;">
+                Create    
+            </button>
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-outline-primary rounded-pill"
+                    @onclick="@(() => SetAction("Update"))" style="width:160px;">
+                Update
+            </button>
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-outline-primary rounded-pill"
+                    @onclick="@(() => SetAction("Delete"))" style="width:160px;">
+                Discontinued
+            </button>
+            &nbsp;&nbsp;
+            @* will go directly to OnClear and does not validation or execute OnValidSubmit*@
+            <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    @onclick="OnClear" style="width:160px;">
+                Clear
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    @onclick="OnSearch" style="width:160px;">
+               Search
+            </button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private string feedBackMsg = "";
+    private List<string> errorMsgs = new();
+
+    //needed for custom validation on form and assigning messages to appropriate fields
+    private EditContext editContext;
+    private ValidationMessageStore validationMessageStore;
+
+
+    //this is the instance of the entity Product that will hold the data of the form
+    //this instance will be tied to the editContext
+    private Product currentProduct = new();
+
+    // foreign key fields
+    [Inject]
+    public CategoryServices _categoryServices { get; set; }
+    private List<Category> categoryList = new();
+
+    [Inject]
+    public SupplierServices _supplierServices { get; set; }
+    private List<Supplier> supplierList = new();
+
+    [Inject]
+    public ProductServices _productServices { get; set; }
+
+    //this javascript injection is needed to used the continue dialogue prompt
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    [Inject]
+    private NavigationManager _navManager { get; set; }
+
+    //declare the routing parameter
+    //this property needs a special annotation to indicate it is a parameter
+    //parameter properties need to be accessible by other pages (aka classes)
+    //  therefore they need to be public
+    [Parameter]
+    public int productid { get; set; } = 0;
+
+
+    private decimal FormatUnitPrice
+    {
+        get { return Math.Round(currentProduct.UnitPrice,2); }
+        set { currentProduct.UnitPrice = value; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        //when the page is first rendered, we need to determined if the page was called with
+        //   a pkey parameter value
+        // No value: assumption is a NEW (create) product will be done, nothing to lookup
+        // Yes value: assumption an existing product record will be altered or deleted
+        //            the current record on the database should be displayed to the user
+        //            within this method, lookup the record to display
+
+        if(productid > 0)
+            currentProduct = await _productServices.Product_GetByID(productid);
+
+        //fill the foreign key field collections
+        categoryList = await _categoryServices.Category_GetAll();
+        supplierList = await _supplierServices.Supplier_GetAll();
+
+    }
+
+    private string CurrentAction;
+
+    private void SetAction(string action) => CurrentAction = action;
+
+    private async Task HandleAction(EditContext context)
+    {
+        //NOTE!!!! only required if you are creating your own custom validation
+        //              logic on your web page
+        editContext = context;
+        validationMessageStore = new ValidationMessageStore(context);
+        if (CurrentAction.Equals("Delete"))
+        {
+            await OnDiscontinued();
+        }
+        else
+        {
+            //this line use the EditContext instance inside of the Model class
+            // so that you have additional functionality to work with
+            //.Validate() invokes the validation of your DataValidation annotation
+            //      within your enTities
+            //this is a manual activation of the validation
+            if (context.Validate())
+            {
+                switch (CurrentAction)
+                {
+                    case "Add":
+                        await OnCreate();
+                        break;
+
+                    case "Update":
+                        await OnUpdate();
+                        break;
+                }
+            }
+        }
+    }
+    private async Task OnCreate()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+        validationMessageStore.Clear();
+       
+
+        try
+        {
+            if (currentProduct.CategoryID == 0)
+            {
+                //                 construction of the validation message store command
+                //                  .Add to your instance of the form for the indicated field
+                //                  parameter 1: the associated field to display the message
+                //                               looking for the "field identifier"
+                //                       example: () => currentProduct.CategoryID
+                //                  parameter 2: the message to display
+                //                       example: "You must select a category"
+                validationMessageStore.Add(() => currentProduct.CategoryID,
+                                            "You must select a category");
+            }
+            if (currentProduct.SupplierID == 0)
+            {
+                validationMessageStore.Add(() => currentProduct.SupplierID,
+                                        "You must select a supplier");
+            }
+            if (currentProduct.UnitPrice < 0.0m)
+            {
+                validationMessageStore.Add(() => currentProduct.UnitPrice,
+                                        "Unit price must be zero or greater.");
+            }
+            //             once your custom validation is done, if there was any, you can check to see
+            //               what your validationMessageStore contains
+            //             if there are any new messages , indicate to the form that the store has been altered
+            //             to do this, we will use the Linq method .Any()  to determine if something exists
+            //             NOTE: the .Any() returns only a true or false; it does NOT return an actual records
+            //                   the .Where() returns actual record
+            if (editContext.GetValidationMessages().Any())
+            {
+                //notify the editcontext that there has been a change to the message store
+                editContext.NotifyValidationStateChanged();
+            }
+            else
+            {
+                //the program assumes that the data is clean and can be further processed
+                //call the product services to receive the "good" data and add it to the database
+
+                int newProductId = await _productServices.Product_Add(currentProduct);
+
+                //                 if an error was thrown by the ProductServices or by the database,
+                //                   control will be passed to the catch
+                //                 if no error was thrown by the ProductServices or by the database.
+                //                   one assumes the data is on the database: success
+                //                 you need to communicate with the user this success
+                feedBackMsg = $"Product {currentProduct.ProductName} (ID: {newProductId}) has been added to database.";
+            }
+
+           
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+
+    }
+
+    private async Task OnUpdate()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+        validationMessageStore.Clear();
+
+        try
+        {
+            if (currentProduct.CategoryID == 0)
+            {
+                validationMessageStore.Add(() => currentProduct.CategoryID,
+                                            "You must select a category");
+            }
+            if (currentProduct.SupplierID == 0)
+            {
+                validationMessageStore.Add(() => currentProduct.SupplierID,
+                                        "You must select a supplier");
+            }
+            if (currentProduct.UnitPrice < 0.0m)
+            {
+                validationMessageStore.Add(() => currentProduct.UnitPrice,
+                                        "Unit price must be zero or greater.");
+            }
+            if (editContext.GetValidationMessages().Any())
+            {
+                editContext.NotifyValidationStateChanged();
+            }
+            else
+            {
+                int rowsaffected = await _productServices.Product_Update(currentProduct);
+
+                //Question: DID you ACTUALLY change any records?
+                //situation: an update was attempted but no records on the database were
+                //              actually change AND the action did NOT abort
+                //in this case rowsafftected = 0
+
+                if (rowsaffected == 0)
+                {
+                    feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) change failed.";
+                }
+                else
+                {
+                    feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) change was save.";
+                }
+            }
+          
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+    }
+
+    private async Task OnDiscontinued()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+        validationMessageStore.Clear();
+
+        try
+        {
+            //the custom validation is dependent on how you manage your
+            //  product service method
+            //a) if you are NOT going to use the incoming data to update
+            //   your product before setting the Discontinued field to true
+            //   then you do NOT need to do this custom validation
+            //OR
+            //b) you are going to allow update and discontinue to happen on
+            //      the discontinue THEN you DO need to do this custom validation
+
+            // if (currentProduct.CategoryID == 0)
+            // {
+            //     validationMessageStore.Add(() => currentProduct.CategoryID,
+            //                                 "You must select a category");
+            // }
+            // if (currentProduct.SupplierID == 0)
+            // {
+            //     validationMessageStore.Add(() =>currentProduct.SupplierID,
+            //                             "You must select a supplier");
+            // }
+            // if (currentProduct.UnitPrice < 0.0m)
+            // {
+            //     validationMessageStore.Add(() => currentProduct.UnitPrice,
+            //                             "Unit price must be zero or greater.");
+            // }
+            // if (editContext.GetValidationMessages().Any())
+            // {
+            //     editContext.NotifyValidationStateChanged();
+            // }
+            // else
+            // {
+                int rowsaffected = await _productServices.Product_LogicalDelete(currentProduct);
+
+                //Question: DID you ACTUALLY change any records?
+
+                if (rowsaffected == 0)
+                {
+                    feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) discontinue failed.";
+                }
+                else
+                {
+                    feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) has been disconntinued.";
+                }
+           // }
+           
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+    }
+
+    // if you are going to physically remove a record that is of importance
+    //  CONSIDER prompting the user for confirmation BEFORE physically removing
+    //  the record
+    // private void OnRemoval()
+    // {
+    //     //clear old messages
+    //     feedBackMsg = "";
+    //     errorMsgs.Clear();
+    //     validationMessageStore.Clear();
+
+    //     try
+    //     {
+    //         int rowsaffected = _productServices.Product_PhysicalDelete(currentProduct);
+
+    //         //Question: DID you ACTUALLY change any records?
+
+    //         if (rowsaffected == 0)
+    //         {
+    //             feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) discontinue failed.";
+    //         }
+    //         else
+    //         {
+    //             feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) has been disconntinued.";
+    //         }
+
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         feedBackMsg = $"System Error: {ex.Message}";
+    //     }
+    // }
+
+    //this event will prompt the user to continue by using a javascript dialogue
+    //the program needs to WAIT until the user responses
+    //In this situation, the dialogue should be run in a separate task
+    //NOTE: the return datatype for this instance will be changed to async Task
+    private async Task OnClear()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+
+        //setup and execute the prompt dialogue
+        object[] messagestring = new object[]
+            {"Clearing the page will lose all unsaved data. Do you wish to continue?"};
+        if(await(jSRuntime.InvokeAsync<bool>("confirm",messagestring)))
+        {
+            //clear out the old values
+            //clear the current product instance of any data (not using local variables)
+            //notice that the "system" constructor is used as the entity has NO constructor code within it
+            currentProduct = new Product();
+        }
+    }
+
+    private async Task OnSearch()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+
+        //setup and execute the prompt dialogue
+        object[] messagestring = new object[]
+            {"Leaving the page will lose all unsaved data. Do you wish to continue?"};
+        if (await (jSRuntime.InvokeAsync<bool>("confirm", messagestring)))
+        {
+            _navManager.NavigateTo("/categoryproducts");
+        }
+    }
+}

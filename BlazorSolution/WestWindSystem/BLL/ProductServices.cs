@@ -30,6 +30,37 @@ namespace WestWindSystem.BLL
                                 .OrderBy(x => x.ProductName)
                                 .ToListAsync();
         }
+
+        public async Task<List<Product>> Product_GetByCategoryID(int categoryid)
+        {
+            return await _context.Products
+                                .Include(x => x.Supplier)
+                                .Where(x => x.CategoryID ==  categoryid)
+                                .OrderBy(x => x.ProductName)
+                                .ToListAsync();
+        }
+
+        public async Task<Product> Product_GetByID(int productid)
+        {
+            return await _context.Products
+                                .FirstOrDefaultAsync(x => x.ProductID ==  productid);
+
+        }
+        #endregion
+
+        #region CRUD (Add, Update and Delete)
+        public async Task<int> Product_Add(Product item)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<int> Product_Update(Product item)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<int> Product_LogicalDelete(Product item)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

@@ -30,6 +30,8 @@ builder.Services.AddDbContext<WestWindContext>(options  => options.UseSqlServer(
 //One for EACH service class in your BLL
 //project recommendation, ADD lastname to the front of your service class
 builder.Services.AddScoped<ProductServices>();
+builder.Services.AddScoped<CategoryServices>();
+builder.Services.AddScoped<SupplierServices>();
 
 
 // Add services to the container.
