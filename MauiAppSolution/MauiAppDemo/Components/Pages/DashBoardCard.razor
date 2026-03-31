@@ -1,0 +1,23 @@
+﻿<div style="border:1px solid #ccc; padding:10px; margin:5px; border-radius:6px;">
+    <h4>@Title</h4>
+    <p>@ChildContent</p>
+</div>
+@code {
+    //why use: Common Layout for each dashboard card
+
+    //same as in BLazor component, a parameter is set on the tag in the parent
+    //  component
+    //in the reusable component, setup a Parameter to receive the
+    //  value from the parent component placed on the component tag
+    [Parameter]
+    public string Title { get; set; } = "Card";
+
+    //to obtain the contents for this component, you will create another
+    //  Parameter
+    //the value that will be placed in this parameter variable will
+    //  come from any content on the parent component between the
+    //  opening and closing tag of the reusable component tag on the parent
+    //  component
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

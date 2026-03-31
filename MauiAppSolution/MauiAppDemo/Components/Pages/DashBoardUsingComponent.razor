@@ -1,0 +1,79 @@
+﻿@page "/dashboarddemo"
+<h3>DashBoard Using Component</h3>
+<h4> ... using blazor component</h4>
+
+@* Create a two column display of content*@
+
+@*
+    repeat(2, minmax(0, 1fr))
+    repeat(2, ...) creates 2 columns (same as 1fr 1fr;)
+
+    however
+    minmax(0, 1fr) each column can shrink to 0 and grow up to 1fr
+
+    why            much more flexible
+                   prevents content from forcing columns wider than expected which
+                        can break layout
+                   allows columns to shrink properly
+                   handles overflow issues better (especially with long text, images, etc)
+                   Work well with responsive designs
+                   separates beginner from professional CSS
+
+    common uses: Card Layouts
+                 Forms (2 column layout)
+                 Dashboards
+
+    gap: 10px   Adds space between columns and rows
+
+    WARNING: grid handles spacing
+             content within the grid must handle itself by standard css
+                example to control an image 
+                    within the given app.css or your own .css file
+                    have an img selector
+                        img {
+                            width: 100%; //image fills the column width
+                            height: auto; //keeps aspect ratio
+
+                        }
+
+                        scales to fit the grid column
+                        However results in various column heights (too tall, too short)
+                        Use height: auto when:
+                            Content matters (e.g., photos, diagrams)
+                            You don’t want cropping
+                            Layout uniformity is less important
+
+
+                        img {
+                            width: 100%; //image fills the column width
+                            height: 200; //fix height
+                            object-fit: cover; //crops nicely
+                        }
+                        Use fixed height when:
+                            Cards / galleries / dashboards
+                            You want a clean grid
+                            Visual consistency matters more than full image
+*@
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;">
+    
+    @* DashBoardCard is the blazor reusable component
+        Title is a tag parameter
+        the content is passed as a parameter to the reusable component 
+          parameter type RenderFragment
+    *@
+    <DashBoardCard Title="Stats">
+        Some Numbers here....
+        like 1,2,3, etc.
+    </DashBoardCard>
+
+    <DashBoardCard Title="Tasks">
+        Upcoming tasks ...
+    </DashBoardCard>
+
+    <DashBoardCard Title="ShortCuts">
+        Useful links ...
+    </DashBoardCard>
+</div>
+@code {
+
+}

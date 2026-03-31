@@ -4,11 +4,14 @@
              xmlns:local="clr-namespace:MauiAppDemo"
              xmlns:components="clr-namespace:MauiAppDemo.Components"
              x:Class="MauiAppDemo.MainPage">
-
-    <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
-        <BlazorWebView.RootComponents>
-            <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
-        </BlazorWebView.RootComponents>
-    </BlazorWebView>
-
+    
+    <!--use CSS-GRID to resolve the problem with the menu control in the
+        vertical view of the android emulator-->
+    <Grid RowDefinitions="Auto,*">
+        <BlazorWebView Grid.Row="1" x:Name="blazorWebView" HostPage="wwwroot/index.html">
+            <BlazorWebView.RootComponents>
+                <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
+            </BlazorWebView.RootComponents>
+        </BlazorWebView>
+    </Grid>
 </ContentPage>

@@ -1,4 +1,6 @@
 ﻿@page "/hello"
+@* add this using class to obtain device information*@
+@using Microsoft.Maui.Devices
 
 <PageTitle>Hello</PageTitle>
 <h3>Hello</h3>
@@ -12,6 +14,10 @@
         <li>use either the search to find emoji (Party) OR scroll through the emojis yourself</li>
     </ol>
 </p>
+
+<p>this is a Razor page running inside a native app</p>
+<p><strong>Platform:</strong> @DeviceInfo.Current.Platform</p>
+<p><strong>OS:</strong>@DeviceInfo.Current.VersionString</p>
 
 @code {
 
