@@ -1,14 +1,41 @@
 ﻿@page "/counter"
 
 <h1>Counter</h1>
+<div>
+    Examining the MVU (Model-View-Update)<br />
+    Model → View<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;└─ Update
+
+</div>
+<br />
+<strong> View: the display</strong>
+<br />
 
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+    @*
+    User Action
+     ↓
+    Update = logic that changes the data (method)
+     ↓
+    Model = data/state (data changes)
+     ↓
+    View = what the user sees re-renders automatically
+
+    Blazor automatically re-renders the View (UI) when the Model changes
+    *@
+    @*
+        Model
+    *@ 
     private int currentCount = 0;
 
+    @*
+        the event Update
+    *@ 
     private void IncrementCount()
     {
         currentCount++;

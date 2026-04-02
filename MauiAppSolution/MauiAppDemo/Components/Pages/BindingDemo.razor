@@ -1,0 +1,58 @@
+﻿@page "/binding-demo"
+<PageTitle>Binding Demo</PageTitle>
+<h3>Binding Demo</h3>
+@*
+    basic binding learned in Blazor
+     input bound to variable
+           type data into input control
+           out to Hello does not appear
+           tab out of input control, data is transferred to variable
+                and name is displayed in hello xxxx
+    
+
+         key point: data is not move until leaving the control
+                    data change --> UI (Hello) display is changed
+                                    wherever name variable is used
+                    this is considered as automatic binding
+*@
+<h4>Simple Binding Example</h4>
+<input @bind="name" />
+<p>Hello: @name</p>
+
+<h4>One-Way vs Two-Way Binding Demo</h4>
+
+@*
+    this is a varient of display like Hello above
+    the data flows only from variable to output even though the
+        data is display in an input control
+    @bind forms two way travel
+    try typing in control
+        string changes only in this control even after tabbing off
+    this is One-Way
+    this is a common error in beginner programmers
+*@
+<p>One-way binding example</p>
+<input value="@name" />
+
+<h4>What can @@bind Expand to?</h4>
+<p>@@bind is shorthand for BOTH a value and an event handler:</p>
+
+@*
+    to fix you could use the tradional @bind on control
+        however, change would not happen until after tabbing off control
+    to have immediate UI visibility, use an event handler such as oninput
+        in your binding
+    as you enter data into the control watch the other controls change
+        on each inputted characters without waiting to tab off
+
+    This bind is considered manual binding
+        value=@name displays the current value of the variable
+        @oninput listens for user typing
+        e represents the event arguments (ChangeEventArgs)
+        e.Value?.ToString() gets the typed input as a string
+        The result is assigned back to name
+*@
+<input value="@name" @oninput="(e => name = e.Value?.ToString())" />
+@code {
+    private string name = "";
+}

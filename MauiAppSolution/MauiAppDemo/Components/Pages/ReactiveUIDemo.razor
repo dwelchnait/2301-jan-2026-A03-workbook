@@ -1,0 +1,17 @@
+﻿@page "/reactive-UI-demo"
+<h2>Reactive UI Demo</h2>
+<h4>... using actomatic binding with manual event binding</h4>
+
+<p>Limit the comment area to 50 characters.<br/>
+    What happens when the 51st character is entered?</p>
+    <br/>
+    @* the maxlength is actually going to limit the input size*@
+<textarea @bind="message" @bind:event="oninput" maxlength="50"></textarea>
+<p>Model message content: @message</p>
+<p>Character count: @message.Length</p>
+<p>Remaining characters: @(maxlength - message.Length)</p>
+
+@code {
+    private string message=" ";
+    private int maxlength=50;
+}
