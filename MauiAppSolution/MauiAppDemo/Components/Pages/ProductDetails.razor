@@ -1,0 +1,56 @@
+﻿@page "/products/{id:int}"
+<h3>ProductDetails</h3>
+
+<!--
+    add the using clauses
+
+-->
+@using MauiAppDemo.Models;
+@using MauiAppDemo.Services;
+
+<!--
+    add the injection clauses
+    these injections are the same as doing the injection via an annotation
+-->
+@inject IProductServices _productServices
+@inject NavigationManager _navManager
+
+@if (product is null)
+{
+    <p><em>Product not found.</em></p>
+}
+else
+{
+    <div class="card p-3">
+        <h4>@product.Name</h4>
+        <p><strong>Category:</strong> @product.Category</p>
+        <p><strong>Price:</strong> @product.Price.ToString("C")</p>
+        <p>@product.Description</p>
+
+        <button class="btn btn-secondary btn-sm" @onclick="GoBack">
+            Back to list
+        </button>
+    </div>
+}
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+
+    private Product? product;
+
+    private void GoBack()
+    {
+        _navManager.NavigateTo("products");
+    }
+
+    //there are a couple of places where on could obtain the product detail
+    //a) OnInitialize()
+    //b) OnParameterSet()
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        product = _productServices.GetProductById(id);
+    }
+}

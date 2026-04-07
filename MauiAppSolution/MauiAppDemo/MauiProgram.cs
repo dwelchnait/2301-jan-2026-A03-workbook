@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
+using Microsoft.Extensions.Logging;
+
+#region additional namespaces
+using MauiAppDemo.Services;
+#endregion
 
 namespace MauiAppDemo
 {
@@ -17,9 +22,13 @@ namespace MauiAppDemo
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+    		builder.Services.AddBlazorWebViewDeveloperTools(); 
     		builder.Logging.AddDebug();
 #endif
+
+            //add the required code so to be able to inject services into the app
+            builder.Services.AddSingleton<IProductServices, MockProductServices>();
+            builder.Services.AddSingleton<IDiscountServices, MockDiscountServices>();
 
             return builder.Build();
         }

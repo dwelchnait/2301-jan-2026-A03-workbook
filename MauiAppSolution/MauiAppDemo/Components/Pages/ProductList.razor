@@ -1,0 +1,79 @@
+﻿@page "/products"
+
+<PageTitle>Product List </PageTitle>
+<h3>Product List</h3>
+<h4>... implementation using interfaces and services</h4>
+
+<!-- 
+    add the using clauses
+
+-->
+@using MauiAppDemo.Models;
+@using MauiAppDemo.Services;
+
+<!--
+    add the injection clauses
+    these injections are the same as doing the injection via an annotation
+-->
+@inject IProductServices _productServices
+@inject IDiscountServices _discountServices
+@inject NavigationManager _navManager
+
+@if (products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!products.Any())
+{
+    <p>No products available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Discounted Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in products)
+            {
+                var discounted = _discountServices.ApplyDiscount(p.Price);
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Name</td>
+                    <td>@p.Category</td>
+                    <td>@p.Price.ToString("C")</td>
+                    <td>@discounted.ToString("C")</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"
+                                @onclick="() => GoToDetails(p.Id)">
+                            View
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private IEnumerable<Product>? products;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        products = _productServices.GetProducts();
+    }
+
+    private void GoToDetails(int id)
+    {
+        _navManager.NavigateTo($"/products/{id}");   
+    }
+}
