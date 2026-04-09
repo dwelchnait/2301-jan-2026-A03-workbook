@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿<!-- Additionla namespace-->
+@using MauiAppDemo.Helpers
+
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
@@ -11,7 +14,30 @@
         </div>
 
         <article class="content px-4">
-            @Body
+            <div style="background-color:@BackgroundColor; color:@TextColor; min-height:100vh; padding:20px;">
+                @Body
+            </div>
         </article>
     </main>
 </div>
+@code{
+    private string Theme = Preferences.Get("app_theme", "light");
+    private string BackgroundColor => Theme == "dark" ? "black" : "white";
+    private string TextColor => Theme == "dark" ? "white" : "black";
+
+    //these methods will assist in the immediate notification of preference changing
+    protected override void OnInitialized()
+    {
+        PreferenceManager.OnPreferenceChanged += Refresh;
+    }
+
+    private void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        PreferenceManager.OnPreferenceChanged -= Refresh;
+    }
+}

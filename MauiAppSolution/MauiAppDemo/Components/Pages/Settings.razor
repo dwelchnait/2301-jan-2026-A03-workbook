@@ -1,0 +1,134 @@
+﻿@page "/settings"
+
+<!-- Additional Namespaces-->
+@using MauiAppDemo.Helpers
+
+<PageTitle>Settings</PageTitle>
+
+<!-- this label is used to demo the same control used in MAUI vs Blazor
+        and the automatic effects of preferences to MAUI vs Blazor
+-->
+<label>
+    This label control is in the WebView of a <strong>razor page</strong> 
+        which does not react automatically to preferences.
+</label>
+
+<!--
+        Theme toggle checkbox.
+        @bind="IsDarkMode" connects the checkbox to the IsDarkMode property.
+        Toggling updates:
+        1. Blazor UI colors (BackgroundColor/TextColor)
+        2. MAUI theme via Application.Current.UserAppTheme
+        3. Preferences storage for persistence
+
+        BUT Why!!!!?
+        Two “layers” in MAUI Blazor Hybrid
+
+            In a MAUI Blazor Hybrid app, you have:
+            MAUI layer
+                Controls like Label, Button, Entry in XAML or in MAUI pages
+                Application.Current.UserAppTheme affects these controls directly
+                System/dark/light theme-aware resources update automatically
+            Blazor layer
+                HTML elements (<div>, <p>, <input>) rendered in the WebView
+                They are not MAUI controls
+                They don’t automatically respond to Application.Current.UserAppTheme
+
+        Explanation
+        MAUI Layer
+            Real native controls
+            Automatically respects Application.Current.UserAppTheme
+        Blazor Layer
+            Rendered as HTML in a WebView
+            Has no direct knowledge of MAUI theme settings
+            Must use bound properties or CSS to reflect changes
+        The <div> acts as a “bridge”
+            Changes its background/text color based on IsDarkMode
+            Gives visual feedback inside the Blazor page
+
+        Visual analogy
+        Think of MAUI as the room
+        Blazor WebView is a picture frame on the wall inside the room
+        Changing the room light (UserAppTheme) does not automatically
+            change the picture colors
+        You need to manually adjust the picture colors (the <div>)
+    -->
+@* <div style="background-color:@BackgroundColor; color:@TextColor; min-height:100vh; padding:20px;"> *@
+    <h3>Settings</h3>
+    <div class="mb-3">
+        <label>Dark Mode</label>
+        <input type="checkbox" @bind="IsDarkMode"/>
+    </div>
+
+    <p>@ThemeText</p>
+
+    <h5>Last Launch:</h5>
+    <p>@LastLaunch</p>
+@* </div> *@
+
+@code {
+    private bool _isDarkMode;
+    private bool IsDarkMode
+    {
+        get { return _isDarkMode; }
+        set { 
+            _isDarkMode =value;
+
+            //persist the change to the preferences so that when
+            //  the application runs again, the theme will be
+            //  as last set
+
+            Preferences.Set("app_theme", value ? "dark" : "light");
+
+            //call the Helper to notify application that the preferences (Theme)
+            //  has been changed
+            //This will be picked up in MainLayout and be "immediately" applied to all pages
+            //Remember MAUI is auto-update bUT Blazor is not and has to be notified
+            PreferenceManager.NotifyPreferenceChanged();
+
+            ApplyTheme(value);
+            UpdateThemeText();
+        }
+    }
+    private string ThemeText = "";
+    private string LastLaunch = "";
+    // private string BackgroundColor => IsDarkMode ? "black" : "white";
+    // private string TextColor => IsDarkMode ? "white" : "black";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // Load theme
+        //obtains the current theme, if nothing obtained, defaults to light
+        var saveTheme = Preferences.Get("app_theme", "light");
+
+        //save the data of whether the DarkMode is on (true) or off (false)
+        IsDarkMode = saveTheme == "dark";
+
+        // Load last launch
+        LastLaunch = Preferences.Get("last_launch", "Never");
+    }
+
+    private void ApplyTheme(bool isdark)
+    {
+         /*
+          * Application.Current.UserAppTheme is a MAUI-level property.
+            It controls the app’s global theme for all MAUI controls
+                         (XAML controls like Label, Button, Entry)
+                 Works on Android, iOS, Mac, and Windows
+            Changing this does not automatically update Blazor HTML inside the WebView
+                 — that’s why we manually bind <div> colors.
+            Any MAUI controls on the page that support theme-aware styles will
+                 immediately react when you call ApplyTheme.
+          */
+        Application.Current.UserAppTheme =
+            isdark ? AppTheme.Dark : AppTheme.Light;
+    }
+    private void UpdateThemeText()
+    {
+        ThemeText = IsDarkMode ? "Dark Mode" : "Light Mode";
+    }
+}
+
+
