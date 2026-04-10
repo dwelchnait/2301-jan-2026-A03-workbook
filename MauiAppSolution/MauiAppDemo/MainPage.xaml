@@ -12,23 +12,23 @@
     <Grid RowDefinitions="Auto,*">
 
         <!-- Native MAUI header row -->
-        <HorizontalStackLayout Padding="10" Spacing="10">
+        <!--<HorizontalStackLayout Padding="10" Spacing="10">
             <Label Text="MAUI Native Header" FontAttributes="Bold" />
             <Button Text="Tap Me"/>
-        </HorizontalStackLayout>
+        </HorizontalStackLayout>-->
         <!-- MAUI Label that reacts to theme 
                look at the header of the page under the icons
               preferences will automatically be applied to MAUI controls
                   that is native controls on a xaml page
              -->
-        <Label x:Name="DemoLabel"
+        <!--<Label x:Name="DemoLabel"
              Grid.Row="0"
              Text="I (Label control) react to MAUI theme because I am on the MainPage.xaml file which is MAUI"
              FontSize="18"
              TextColor="{AppThemeBinding Light=Black, Dark=White}"
              BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
              HorizontalOptions="Center"
-             VerticalOptions="End" />
+             VerticalOptions="End" />-->
 
         <!-- BlazorWebView in the second row -->
         <BlazorWebView Grid.Row="1" x:Name="blazorWebView" HostPage="wwwroot/index.html">
