@@ -9,7 +9,7 @@ namespace MauiAppDemo.Services
         //keys values for your preference can be any character string
         //recommended is a character string with meaning to the preference
         private const string ThemeKey = "app_theme";
-        private const string FontSizeKey = "app-fontsize";
+        private const string FontSizeKey = "app_fontsize";
 
         public event Action? OnChange; //interface
 

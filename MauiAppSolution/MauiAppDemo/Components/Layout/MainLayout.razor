@@ -1,5 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
+<!-- additional namespaces-->
+@using MauiAppDemo.Services
+
+<!-- additional implementation-->
+@implements IDisposable
 
 <div class="page">
     <div class="sidebar">
@@ -12,6 +17,12 @@
         </div>
 
         <article class="content px-4">
+            <!--
+               the styling here is to set the theme for the app_theme preference
+               this ensures all pages in the BlazorView will show the same theme instead of
+                    coding the style on each component
+               if you have other preferences, you could just add them to the style
+           -->
             <div style="background-color:@BackgroundColor; color:@TextColor; min-height:100vh;">
                 @Body
             </div>
@@ -19,9 +30,36 @@
     </main>
 </div>
 @code{
-    private string Theme { get; set; } = Preferences.Get("app_theme", "light");
-    private string BackgroundColor => Theme == "dark" ? "black" : "white";
-    private string TextColor => Theme == "dark" ? "white" : "black";
 
-  
+    private string BackgroundColor => _perferenceServices.IsDark ? "black" : "white";
+    private string TextColor => _perferenceServices.IsDark ? "white" : "black";
+
+    [Inject]
+    public IAppPreferenceServices _perferenceServices { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized(); //optional
+
+        //get the current stored preference loaded into
+        //  the preference service clas
+        _perferenceServices.Load();
+
+        //signal the app that a change has been requested
+        //  that needs to be acted upon
+        _perferenceServices.OnChange += Refresh;
+    }
+
+    private void Refresh()
+    {
+        //send a request to the system that an event needs to have action
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        //signal the app that a change has been requested
+        //  that needs to be acted upon
+        _perferenceServices.OnChange -= Refresh;
+    }
 }

@@ -27,8 +27,10 @@ namespace MauiAppDemo
 #endif
 
             //add the required code so to be able to inject services into the app
+            // !!!!!!!YOU MUST REGISTER EACH AND EVERY SERYICE CLASS YOU CREATE!!!!!!!!
             builder.Services.AddSingleton<IProductServices, MockProductServices>();
             builder.Services.AddSingleton<IDiscountServices, MockDiscountServices>();
+            builder.Services.AddSingleton<IAppPreferenceServices, AppPreferenceServices>();
 
             return builder.Build();
         }
