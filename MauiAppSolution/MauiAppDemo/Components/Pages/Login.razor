@@ -1,0 +1,64 @@
+﻿@page "/login"
+
+@* @inject NavigationManager navManager *@
+
+<h2>Login</h2>
+<h5>.... sample simple login screen</h5>
+
+@* an area to display failed loggin attempts*@
+@if(!string.IsNullOrWhiteSpace(errorMsg))
+{
+    <p style="color:red;">@errorMsg</p>
+}
+
+@*
+    need controls to allow the user to enter userid and password
+*@
+<label for="userid">User ID:</label>
+<input id="userid" @bind="userid" type="text"/>
+<br/><br/>
+<label for="password">Password:</label>
+<input id="password" @bind="password" type="password" />
+<br />
+<br />
+<button type="submit" class="btn btn-outline-primary rounded-pill"
+            @onclick="HandleLogin">
+    Login
+</button>
+
+
+@code {
+    string errorMsg = "";
+    string userid = "";
+    string password = "";
+
+    [Inject]
+    public NavigationManager navManager { get; set; }
+
+    private async Task HandleLogin()
+    {
+        //in real life a backend API would validate the credentials to a secured storage data area (eg database)
+        //the API would return a token with credentials and other information indicating a valid id/password
+        if (userid == "user2301" && password == "Password2301")
+        {
+            //create a random GUID token
+            var token = new Guid().ToString();
+
+            //Save the token securely on the device for the application
+            //Important detail
+            //At this point:
+            //  you haven't actually told the app the user is autheniticated
+            //  you ONLY stored a token using key value: authToken
+            await SecureStorage.Default.SetAsync("authToken", token);
+
+            //go to the Home page
+            navManager.NavigateTo("/");
+        }
+        else
+        {
+            errorMsg = "Invalid userid or password";
+        }
+
+    }
+
+}

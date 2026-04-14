@@ -1,6 +1,23 @@
-﻿<Router AppAssembly="typeof(MauiProgram).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+﻿@inject NavigationManager navManager
+@using Microsoft.AspNetCore.Components.Routing
+
+<Router AppAssembly="typeof(MauiProgram).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync(); //optional
+        var token = await SecureStorage.Default.GetAsync("authToken");
+        var target = string.IsNullOrEmpty(token) ? "/login" : "/";
+        var currentPath = new Uri(navManager.Uri).AbsolutePath; 
+        if (!string.Equals(currentPath, target, StringComparison.OrdinalIgnoreCase))
+        {
+            navManager.NavigateTo(target);
+        }
+    }
+}
